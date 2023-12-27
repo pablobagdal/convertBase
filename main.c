@@ -145,7 +145,21 @@ double convertBaseToDec(char num[], int fromBase) {
 //     printf("\n");
 // }
 
-int main() {
+void printDecConvertedToBase(double num) {
+
+}
+
+void printWelcome() {
+    printf("Добро пожаловать в программу для выполнения операция и расчётов с числами в различных системах счисления.\n");
+}
+void printMenu() {
+    printf("Выберите пункт меню:\n");
+    printf("1. Перевести число из одной системы в другую\n");
+    printf("2. Выполнить арифметическую операцию между двумя числами\n");
+    printf("Выберите пункт меню:\n");
+}
+
+void scenario1() {
     char num[100];
     int fromBase, toBase;
     double numInDec;
@@ -161,12 +175,117 @@ int main() {
 
     printf("Ваше число в десятичной системе будет равняется %lf\n", numInDec);
 
-    // printf("Введите основание новой системы счисления: ");
-    // scanf("%d", &toBase);
+    printf("Введите основание желаемой системы счисления: ");
+    scanf("%d", &toBase);
 
-    // // Переводим и выводим результат
-    // convertBaseFromDec(12378.123, toBase);
-    // convertBaseToDec("123aef.aa", fromBase);
+    printDecConvertedToBase(numInDec);
+}
 
+void scenario2() {
+    char num1[100];
+    char num2[100];
+
+    int fromBase1;
+    int fromBase2;
+
+    int toBase;
+
+    double numInDec1;
+    double numInDec2;
+
+    double result;
+
+    char oper[256];
+
+    printf("Введите первое число: ");
+    scanf("%s", num1);
+
+    printf("Введите основание системы счисления первого числа: ");
+    scanf("%d", &fromBase1);
+
+    printf("Введите второе число: ");
+    scanf("%s", num2);
+
+    printf("Введите основание системы счисления второго числа: ");
+    scanf("%d", &fromBase2);
+
+    printf("Введите основание желаемой системы счисления: ");
+    scanf("%d", &toBase);
+
+    printf("Введите желаемую операцию ('+', '-', '*', '/'): ");
+    scanf("%s", oper);
+
+    // вычисления
+    numInDec1 = convertBaseToDec(num1, fromBase1);
+    numInDec2 = convertBaseToDec(num2, fromBase2);
+
+    switch (oper[0])
+    {
+    case '+':
+        result = numInDec1 + numInDec2;
+        break;
+    case '-':
+        result = numInDec1 - numInDec2;
+        break;
+    case '*':
+        result = numInDec1 * numInDec2;
+        break;
+    case '/':
+        if(numInDec2 == 0) {
+            printf("Деление на ноль запрещено\n");
+            return;
+        }
+        result = numInDec1 / numInDec2;
+        break;
+    default:
+        printf("Недопустимая операция\n");
+        return;
+        break;
+    }
+
+    printf("%s(%d) %c %s(%d) = ", num1, fromBase1, oper[0], num2, fromBase2);
+    printDecConvertedToBase(result);
+    printf("(%d)\n", toBase);
+
+}
+
+int scenario(char choice) {
+    if(choice == 1) {
+        scenario1();
+        return 1;
+    } else if(choice == 2) {
+        scenario2();
+        return 2;
+    } else if(choice == 3) {
+        return 0;
+    } else {
+        printf("Некорректный пункт меню\n");
+        return -1;
+    }
+}
+
+int main() {
+   printf("Result: %s = %lf\n", "3a.23d7", convertBaseToDec("3a.23d7", 16));
+   
     return 0;
 }
+// int main() {
+//     char userInput[256];
+//     printWelcome();
+
+//     while(1) {
+//         printMenu();
+
+//         scanf("%s", userInput);
+        
+//         if (scenario(userInput[0]) == 0) {
+//             break;
+//         }
+
+//         // system("pause");
+//         scanf("%s", userInput);
+//         // system("pause");
+//         system("clear");
+//     }
+//     return 0;
+// }
