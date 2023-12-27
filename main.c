@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // Функция для перевода числа из некоторой системы счисления в десятичную
 double convertBaseToDec(char num[], int fromBase) {
@@ -31,7 +32,7 @@ double convertBaseToDec(char num[], int fromBase) {
         } else if (num[i] == '.') {
             // переходим к дробной части
             hasFraction = 1;
-            i+=2;
+            // i сейчас фактически является индексом расположения точки
             break;
         } else {
             printf("Ошибка: некорректный символ в числе\n");
@@ -47,14 +48,15 @@ double convertBaseToDec(char num[], int fromBase) {
     }
 
     if(hasFraction) {
-        for (; i < length; i++) {
+        // помним, что i является индексом расположения точки
+        for (int j = i+1; j < length; ++j) {
             int digit;
-            if (num[i] >= '0' && num[i] <= '9') {
-                digit = num[i] - '0';
-            } else if (num[i] >= 'A' && num[i] <= 'Z') {
-                digit = num[i] - 'A' + 10;
-            } else if (num[i] >= 'a' && num[i] <= 'z') {
-                digit = num[i] - 'a' + 10;
+            if (num[j] >= '0' && num[j] <= '9') {
+                digit = num[j] - '0';
+            } else if (num[j] >= 'A' && num[j] <= 'Z') {
+                digit = num[j] - 'A' + 10;
+            } else if (num[j] >= 'a' && num[j] <= 'z') {
+                digit = num[j] - 'a' + 10;
             } else {
                 printf("Ошибка: некорректный символ в числе\n");
                 return 0;
@@ -67,12 +69,13 @@ double convertBaseToDec(char num[], int fromBase) {
 
             fraction = fraction * fromBase + digit;
         }
-    }
-    fractionPart = fraction;
 
-    while(fractionPart >= 1) {
-        fractionPart /= (double)10;
+        fractionPart = (double)fraction / pow(fromBase, length - 1 - i);
     }
+
+    // while(fractionPart >= 1) {
+    //     fractionPart /= (double)10;
+    // }
 
 
     total = wholePart + fractionPart;
