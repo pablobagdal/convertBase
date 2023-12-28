@@ -103,7 +103,7 @@ void printDecConvertedToBase(double decimal, int toBase) {
     int wholePart = decimal;
     int fractionPart = 0;
 
-    double toFraction = 0;
+    // double toFraction = 0;
 
     double onlyFraction = 0;
 
@@ -112,12 +112,14 @@ void printDecConvertedToBase(double decimal, int toBase) {
     }
 
     if (hasFraction) {
-        toFraction = decimal - wholePart;
-        onlyFraction = toFraction;
-        while(round(toFraction * FLOATING_PRECISION)/FLOATING_PRECISION != 0) {
-            fractionPart = 10*fractionPart + (int)(toFraction*10);
-            toFraction = toFraction*10 - (int)(toFraction*10);
-        }
+        // toFraction = decimal - wholePart;
+        onlyFraction = decimal - wholePart;
+
+        // вроде это уже не нужно
+        // while(round(toFraction * FLOATING_PRECISION)/FLOATING_PRECISION != 0) {
+        //     fractionPart = 10*fractionPart + (int)(toFraction*10);
+        //     toFraction = toFraction*10 - (int)(toFraction*10);
+        // }
     }
 
     wholePart = decimal;
@@ -163,7 +165,6 @@ void printDecConvertedToBase(double decimal, int toBase) {
             onlyFraction *= toBase;
         }
     }
-    
 
     // Выводим результат
     for (int i = 0; i < index; i++) {
