@@ -3,6 +3,18 @@
 #include <string.h>
 #include <math.h>
 
+#define FLOATING_PRECISION 1000000.0
+
+#ifdef _WIN32
+void clearScreen() {
+    system("cls");
+}
+#else
+void clearScreen() {
+    system("clear");
+}
+#endif
+
 // Функция для перевода числа из некоторой системы счисления в десятичную
 double convertBaseToDec(char num[], int fromBase) {
     double total = 0;
@@ -102,7 +114,7 @@ void printDecConvertedToBase(double decimal, int toBase) {
     if (hasFraction) {
         toFraction = decimal - wholePart;
         onlyFraction = toFraction;
-        while(round(toFraction * 1000000.0)/1000000.0 != 0) {
+        while(round(toFraction * FLOATING_PRECISION)/FLOATING_PRECISION != 0) {
             fractionPart = 10*fractionPart + (int)(toFraction*10);
             toFraction = toFraction*10 - (int)(toFraction*10);
         }
@@ -150,19 +162,6 @@ void printDecConvertedToBase(double decimal, int toBase) {
             onlyFraction = onlyFraction - (int)onlyFraction;
             onlyFraction *= toBase;
         }
-        // while (fractionPart > 0) {
-        //     int remainder = fractionPart % toBase;
-        //     char digit;
-
-        //     if (remainder < 10) {
-        //         digit = remainder + '0';
-        //     } else {
-        //         digit = remainder - 10 + 'A';
-        //     }
-
-        //     result[index++] = digit;
-        //     fractionPart /= toBase;
-        // }
     }
     
 
@@ -170,14 +169,11 @@ void printDecConvertedToBase(double decimal, int toBase) {
     for (int i = 0; i < index; i++) {
         printf("%c", result[i]);
     }
-    // for (int i = index - 1; i >= 0; i--) {
-    //     printf("%c", result[i]);
-    // }
 
 }
 
 void printWelcome() {
-    system("clear");
+    clearScreen();
     printf("Добро пожаловать в программу для выполнения операция и расчётов с числами в различных системах счисления.\n");
 }
 void printMenu() {
@@ -193,7 +189,7 @@ void scenario1() {
     int fromBase, toBase;
     double numInDec;
 
-    system("clear");
+    clearScreen();
 
     // Вводим число и основание системы счисления
     printf("Введите число: ");
@@ -228,7 +224,7 @@ void scenario2() {
 
     char oper[256];
 
-    system("clear");
+    clearScreen();
 
     printf("Введите первое число: ");
     scanf("%s", num1);
@@ -296,19 +292,6 @@ int scenario(char choice) {
         return -1;
     }
 }
-
-// int main() {
-//    printf("Result: %s = %lf\n", "3a.23d7", convertBaseToDec("3a.23d7", 16));
-   
-//     return 0;
-// }
-// int main() {
-//    printf("Result: %s = ", "58.14");
-//    printDecConvertedToBase(58.14, 16);
-   
-//     return 0;
-// }
-
 int main() {
     char userInput[256];
 
@@ -323,10 +306,10 @@ int main() {
             break;
         }
 
-        // system("pause");
+
         scanf("%s", userInput);
         // system("pause");
-        system("clear");
+        clearScreen();
     }
     return 0;
 }
