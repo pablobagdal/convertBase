@@ -73,11 +73,6 @@ double convertBaseToDec(char num[], int fromBase) {
         fractionPart = (double)fraction / pow(fromBase, length - 1 - i);
     }
 
-    // while(fractionPart >= 1) {
-    //     fractionPart /= (double)10;
-    // }
-
-
     total = wholePart + fractionPart;
 
     if(isNegative) {
@@ -87,78 +82,109 @@ double convertBaseToDec(char num[], int fromBase) {
     return total;
 }
 
-// void convertBaseFromDec(double decimal, int toBase) {
-//     // Переводим из десятичной системы в заданную
-//     char result[100];
-//     int index = 0;
-//     int hasFraction = 0;
+void printDecConvertedToBase(double decimal, int toBase) {
+    // Переводим из десятичной системы в заданную
+    char result[100];
+    int index = 0;
+    int hasFraction = 0;
 
-//     if ((double)(int)decimal != decimal) {
-//         hasFraction = 1;
-//     }
+    int wholePart = decimal;
+    int fractionPart = 0;
 
-//     int wholePart;
-//     int fractionPart;
+    double toFraction = 0;
 
-//     if (hasFraction) {
-//         wholePart = decimal;
-//         fractionPart = decimal - wholePart;
-//     }
+    double onlyFraction = 0;
 
-//     wholePart = decimal;
+    if ((double)(int)decimal != decimal) {
+        hasFraction = 1;
+    }
 
-//     while (wholePart > 0) {
-//         int remainder = wholePart % toBase;
-//         char digit;
+    if (hasFraction) {
+        toFraction = decimal - wholePart;
+        onlyFraction = toFraction;
+        while(round(toFraction * 1000000.0)/1000000.0 != 0) {
+            fractionPart = 10*fractionPart + (int)(toFraction*10);
+            toFraction = toFraction*10 - (int)(toFraction*10);
+        }
+    }
 
-//         if (remainder < 10) {
-//             digit = remainder + '0';
-//         } else {
-//             digit = remainder - 10 + 'A';
-//         }
+    wholePart = decimal;
 
-//         result[index++] = digit;
-//         wholePart /= toBase;
-//     }
-//     if(hasFraction) {
-//         result[index++] = '.';
+    while (wholePart > 0) {
+        int remainder = wholePart % toBase;
+        char digit;
 
-//         while (fractionPart > 0) {
-//             int remainder = fractionPart % toBase;
-//             char digit;
+        if (remainder < 10) {
+            digit = remainder + '0';
+        } else {
+            digit = remainder - 10 + 'A';
+        }
 
-//             if (remainder < 10) {
-//                 digit = remainder + '0';
-//             } else {
-//                 digit = remainder - 10 + 'A';
-//             }
+        result[index++] = digit;
+        wholePart /= toBase;
+    }
 
-//             result[index++] = digit;
-//             fractionPart /= toBase;
-//         }
-//     }
+    // теперь разложим все символы в правильном порядке, то есть в обратном
+    for(int j = 0; j < index-1; j++) {
+        char temp = result[j];
+        result[j] = result[index-1-j];
+        result[index-1-j] = temp;
+    }
+
+
+    if(hasFraction) {
+        result[index++] = '.';
+
+        onlyFraction *= toBase;
+        while ((int)onlyFraction != 0) {
+            int remainder = (int)onlyFraction;
+            char digit;
+
+            if (remainder < 10) {
+                digit = remainder + '0';
+            } else {
+                digit = remainder - 10 + 'A';
+            }
+
+            result[index++] = digit;
+            onlyFraction = onlyFraction - (int)onlyFraction;
+            onlyFraction *= toBase;
+        }
+        // while (fractionPart > 0) {
+        //     int remainder = fractionPart % toBase;
+        //     char digit;
+
+        //     if (remainder < 10) {
+        //         digit = remainder + '0';
+        //     } else {
+        //         digit = remainder - 10 + 'A';
+        //     }
+
+        //     result[index++] = digit;
+        //     fractionPart /= toBase;
+        // }
+    }
     
 
-//     // Выводим результат в обратном порядке
-//     printf("Результат: ");
-//     for (int i = index - 1; i >= 0; i--) {
-//         printf("%c", result[i]);
-//     }
-
-//     printf("\n");
-// }
-
-void printDecConvertedToBase(double num) {
+    // Выводим результат
+    for (int i = 0; i < index; i++) {
+        printf("%c", result[i]);
+    }
+    // for (int i = index - 1; i >= 0; i--) {
+    //     printf("%c", result[i]);
+    // }
 
 }
 
 void printWelcome() {
+    system("clear");
     printf("Добро пожаловать в программу для выполнения операция и расчётов с числами в различных системах счисления.\n");
 }
 void printMenu() {
     printf("Выберите пункт меню:\n");
     printf("1. Перевести число из одной системы в другую\n");
     printf("2. Выполнить арифметическую операцию между двумя числами\n");
+    printf("3. Выход\n");
     printf("Выберите пункт меню:\n");
 }
 
@@ -166,6 +192,8 @@ void scenario1() {
     char num[100];
     int fromBase, toBase;
     double numInDec;
+
+    system("clear");
 
     // Вводим число и основание системы счисления
     printf("Введите число: ");
@@ -181,7 +209,7 @@ void scenario1() {
     printf("Введите основание желаемой системы счисления: ");
     scanf("%d", &toBase);
 
-    printDecConvertedToBase(numInDec);
+    printDecConvertedToBase(numInDec, toBase);
 }
 
 void scenario2() {
@@ -199,6 +227,8 @@ void scenario2() {
     double result;
 
     char oper[256];
+
+    system("clear");
 
     printf("Введите первое число: ");
     scanf("%s", num1);
@@ -247,19 +277,19 @@ void scenario2() {
     }
 
     printf("%s(%d) %c %s(%d) = ", num1, fromBase1, oper[0], num2, fromBase2);
-    printDecConvertedToBase(result);
+    printDecConvertedToBase(result, toBase);
     printf("(%d)\n", toBase);
 
 }
 
 int scenario(char choice) {
-    if(choice == 1) {
+    if(choice == '1') {
         scenario1();
         return 1;
-    } else if(choice == 2) {
+    } else if(choice == '2') {
         scenario2();
         return 2;
-    } else if(choice == 3) {
+    } else if(choice == '3') {
         return 0;
     } else {
         printf("Некорректный пункт меню\n");
@@ -267,28 +297,36 @@ int scenario(char choice) {
     }
 }
 
-int main() {
-   printf("Result: %s = %lf\n", "3a.23d7", convertBaseToDec("3a.23d7", 16));
-   
-    return 0;
-}
 // int main() {
-//     char userInput[256];
-//     printWelcome();
-
-//     while(1) {
-//         printMenu();
-
-//         scanf("%s", userInput);
-        
-//         if (scenario(userInput[0]) == 0) {
-//             break;
-//         }
-
-//         // system("pause");
-//         scanf("%s", userInput);
-//         // system("pause");
-//         system("clear");
-//     }
+//    printf("Result: %s = %lf\n", "3a.23d7", convertBaseToDec("3a.23d7", 16));
+   
 //     return 0;
 // }
+// int main() {
+//    printf("Result: %s = ", "58.14");
+//    printDecConvertedToBase(58.14, 16);
+   
+//     return 0;
+// }
+
+int main() {
+    char userInput[256];
+
+    printWelcome();
+
+    while(1) {
+        printMenu();
+
+        scanf("%s", userInput);
+        
+        if (scenario(userInput[0]) == 0) {
+            break;
+        }
+
+        // system("pause");
+        scanf("%s", userInput);
+        // system("pause");
+        system("clear");
+    }
+    return 0;
+}
